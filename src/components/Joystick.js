@@ -11,8 +11,8 @@ export class Joystick {
         this.joystickStyleColor = 'red'
         this.isActiveStyleColor = 'white'
         this.styleButton = `style="height: 20px; width: 100px "`
-        this.styleStick = `style="position:absolute; height: ${this.stickSize}px; width: ${this.stickSize}px; background: ${this.joystickStyleColor}; left:${this.joystikSize/2-this.stickSize/2}px; top:${this.joystikSize/2-this.stickSize/2}px;  border: 2px red solid; border-radius: 10px; box-sizing: border-box;"`
-        this.styleJoystick = `style="display:block; position:absolute; bottom:${this.joystickPosition.bottom}px; right:${this.joystickPosition.right}px; left:${this.joystickPosition.left}px;height: ${this.joystikSize}px; width: ${this.joystikSize}px;  display: flex; justify-content: center; align-items: center; border: 2px red solid; border-radius: 10px"`
+        this.styleStick = `style="position:absolute; height: ${this.stickSize}px; width: ${this.stickSize}px; background: ${this.joystickStyleColor}; left:${this.joystikSize/2-this.stickSize/2}px; top:${this.joystikSize/2-this.stickSize/2}px;  border: 2px red solid; border-radius: 21px; box-sizing: border-box;"`
+        this.styleJoystick = `style="display:block; position:absolute; bottom:${this.joystickPosition.bottom}px; right:${this.joystickPosition.right}px; left:${this.joystickPosition.left}px;height: ${this.joystikSize}px; width: ${this.joystikSize}px;  display: flex; justify-content: center; align-items: center; background: #b3b3b34d; border: 2px red solid; border-radius: 24px"`
         
 
         this.classJoystick =  this.generateClassName('joystick')  //'joystick'
@@ -225,7 +225,7 @@ export class Joystick {
         }
         curentX = data.curentPosX + touchCurentPosX - data.startX
         curentY = data.curentPosY + touchCurentPosY - data.startY
-        console.log('curentX: ' + curentX)
+        console.log('curentXx: ' + curentX)
         console.log('curentY: ' + curentY)
         
         let remapX = this.remap(curentX,0,this.joystikSize-this.stickSize,-1,1)
