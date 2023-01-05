@@ -19,12 +19,12 @@ const ufoPlate = new Character({assetPath})
 
 
 // ---------------------------------------------- Raycaster
-const raycaster = new THREE.Raycaster();
+// const raycaster = new THREE.Raycaster();
 
-let rayOrigin = new THREE.Vector3(0, 1, 0)
-let rayDirection = new THREE.Vector3(0, -1, 0)
-raycaster.set(rayOrigin, rayDirection)
-raycaster.far = 20
+// let rayOrigin = new THREE.Vector3(0, 1, 0)
+// let rayDirection = new THREE.Vector3(0, -1, 0)
+// raycaster.set(rayOrigin, rayDirection)
+// raycaster.far = 20
 
 
 // //--------------------------------------------------- Audio
@@ -49,8 +49,6 @@ function init(){
     sceneInit()
     geometryInit()
 
-    //rayInit()  //-ArrowInit
-
     cubesInit()
     //cubesRoundInit()
 
@@ -70,18 +68,14 @@ function init(){
     ufoPlate.init()
     ufoPlate.registerControllers(joyLeft,joy)
 
-
     //----------------------------------------------------------------//
-    const mat = new THREE.MeshPhongMaterial({
-        color: new THREE.Color('red'),
-        envMap: reflectionCube
-    });
-
-    objLoader('cow_edit_ver1.glb', 0.5, 5, mat)
-    //-------------------------------------------------------------//
+    // const mat = new THREE.MeshPhongMaterial({
+    //     color: new THREE.Color('red'),
+    //     envMap: reflectionCube
+    // });
 
     // instLoader('cow_edit_ver1.glb', 1, 50, 200)
-    //instLoader('pine_tree_triple_no_tank_ver2.glb', 2, 1000, 300)
+    // instLoader('pine_tree_triple_no_tank_ver2.glb', 2, 1000, 300)
 
     let g =[]
     g = posGen(30)
@@ -169,7 +163,6 @@ function update(){
 //----------------------------------------------------------- Geometry ------------------------------------------------------------------//
 
 function geometryInit() {
- 
     //--------------------------- Floor --------------------------//
     const floorGeometry = new THREE.PlaneGeometry( 500, 500 );
     const floorMaterial = new THREE.MeshStandardMaterial( {
@@ -187,12 +180,10 @@ function geometryInit() {
     const grid = new THREE.GridHelper(500,100)
     scene.add(grid)
     grid.position.y = -0.6
-  
 }
   
    
 function cubesInit(){
-
     const geometry = new THREE.BoxGeometry( 1, 1, 1 );
     geometry.translate( 0, 0.5, 0 );
 
@@ -212,63 +203,15 @@ function cubesInit(){
       mesh.updateMatrix();
       mesh.matrixAutoUpdate = false;
       scene.add( mesh );
-  
-    }
-  
+    };
 }
 
 
-//----------------------------------------- obj Generators --------------------------------------------------------------------//
-
-function objLoader(link,scale,count=1,material){
-
-    const positions = new Array()
-    for (let i = 0; i < count; i++) {
-        positions.push({
-            x: Math.random() * 10 - 5,
-            y: 0,
-            z: Math.random() * 10 - 5
-        })
-    }
-
-    let obj;
-    const loader = new GLTFLoader();
-
-    loader.setPath(assetPath);
-    loader.load(link, function(object){
-        object.scene.traverse(function(child){
-            if (child.isMesh){  
-                child.castShadow = true;
-                //child.receiveShadow = true;
-                if(material){
-                    child.material =material
-                }
-                
-            }
-          })
-        
-        obj = object.scene;
-
-        positions.forEach((item)=>{
-            const mesh = obj.clone();
-            mesh.position.copy(item)
-            mesh.scale.set(scale, scale, scale)
-            scene.add(mesh);
-            
-        })
-
-        // obj.position.y = -0.6
-        // scene.add(obj);
-        // obj.scale.set(scale, scale, scale)
-
-    });
-}
+//----------------------------------------- obj Generators -------------------------------------------------------//
 
 
 function posGen (count) {
-
-    const positions =[];
-    
+    const positions =[]; 
     const raycaster = new THREE.Raycaster();
 
     let rayOrigin = new THREE.Vector3(0, 5, 0)
@@ -286,23 +229,5 @@ function posGen (count) {
 
         positions.push(itemPosition)
     }
-
-    // console.log(positions)
-
-
-    // const n = new THREE.Vector3();
-    // const origin = new THREE.Vector3();
-    // n.copy(group.children[1].rotation);
-
-   
-    //origin.set(group.position.x, 1.9, group.position.z)
-
-    //arrowHelper.setDirection(n);
-    //arrowHelper.position.copy(origin)
-    //arrowHelper.position.set(group.position)
-    // 
-    // raycaster.set(origin, rayDirection)
-
     return positions;
-
 }

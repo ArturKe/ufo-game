@@ -19,7 +19,6 @@ export class ScatterLOD {
 
     // Генерирует массив рандомных векторов позиций
     init(){ 
-
         for (let i = 0; i < this.count; i++) {
             
             this.positions.push({
@@ -28,14 +27,11 @@ export class ScatterLOD {
                 z: Math.random() * this.area - this.area/2
             })
         }
-
     }
 
 
     registerScene(scene){
-
         this.scene = scene
-
     }
 
     // Генерирует ЛОДы составленные из примитивов, для наглядной демонстрации работы ЛОДов
@@ -90,125 +86,75 @@ export class ScatterLOD {
     async generateDimple(){
 
         let highDetail, midleDetail, lowDetail
-       
-        const mapSprite = new THREE.TextureLoader().load(this.assetPath + 'textures/pine_sprite_ver3.png' );
-        const materialSprite = new THREE.SpriteMaterial( { map: mapSprite } );
 
-        await this.fileLoader('pine_tree_triple_no_tank_ver2.glb')
-        .then((item)=>{ highDetail = item })
+        // await this.fileLoader2('pine_tree_triple_no_tank_ver2.glb').then((item)=>{ console.log(this.addProperties(item)) })
 
-        await this.fileLoader('pine_tree_triple_no_tank_MIDLE_ver2.glb')
-        .then((item)=>{ midleDetail = item })
+        await this.fileLoader2('pine_tree_triple_no_tank_ver2.glb')
+        .then((item)=>{ highDetail = this.addProperties(item).scene })
 
-        await this.fileLoader('pine_tree_triple_no_tank_LOW_ver2.glb')
-        .then((item)=>{ lowDetail = item })
+        await this.fileLoader2('pine_tree_triple_no_tank_MIDLE_ver2.glb')
+        .then((item)=>{ midleDetail = this.addProperties(item).scene })
 
-        //----------------------------------------------------------------------------------
-        // await new Promise((resolve,reject)=>{
+        await this.fileLoader2('pine_tree_triple_no_tank_LOW_ver2.glb')
+        .then((item)=>{ lowDetail = this.addProperties(item).scene })
 
-        //     const loader = new GLTFLoader();
-        
-        //     loader.setPath(this.assetPath);
-        //     loader.load('pine_tree_triple_no_tank_ver2.glb', function(object){
-
-        //         object.scene.traverse(function(child){
-        //             if (child.isMesh){  
-        //                 child.castShadow = true;
-        //                 //child.receiveShadow = true;
-        //                 // if(material){
-        //                 //     child.material = this.material
-        //                 // }
-                        
-        //             }
-        //         })
-                
-        //         highDetail = object.scene;
-        //         resolve()
-
-        //     });
-        // })
-
-
-        await new Promise((resolve,reject)=>{
-            console.log('High_Detail ---------------------')
-            console.log(highDetail)
-            console.log(midleDetail)
-            resolve()
-
-        })
-
-        await new Promise((resolve,reject)=>{
-
-                this.positions.forEach((item)=>{
-
-                    const lod = new THREE.LOD()
-                    let meshLod
-        
-                    const sprite = new THREE.Sprite( materialSprite );
-        
-                    meshLod = highDetail.clone()
-                    meshLod.scale.set(this.scale, this.scale, this.scale)
-                    lod.addLevel( meshLod, 15 );
-        
-                    meshLod = midleDetail.clone()
-                    meshLod.scale.set(this.scale, this.scale, this.scale)
-                    lod.addLevel( meshLod, 35 );
-
-                    meshLod = lowDetail.clone()
-                    meshLod.scale.set(this.scale, this.scale, this.scale)
-                    lod.addLevel( meshLod, 80 );
-        
-                    meshLod = sprite.clone()
-                    meshLod.scale.set(this.scale*4, this.scale*4, this.scale*4)
-                    lod.addLevel( meshLod, 130);
-
-                    lod.position.copy(item)
-                    lod.rotation.y = Math.random() * 3
-                    let scaleLod = Math.random() * 1.6 + 0.4
-                    lod.scale.set(scaleLod,scaleLod,scaleLod)
-        
-                    this.scene.add( lod );
-         
-                })
-
-            
-            resolve()
-        })
-        
-
+        await this.positioner(highDetail, midleDetail, lowDetail)
     }
 
+    async positioner (highDetail, midleDetail, lowDetail) {
+        this.positions.forEach((item)=>{
 
-    fileLoader(url){  // Загружает файл
-        return new Promise((resolve,reject)=>{
-            const loader = new GLTFLoader();
-        
-            loader.setPath(this.assetPath);
-            loader.load(url, (object) => {
+            const lod = new THREE.LOD()
+            let meshLod
 
-                object.scene.traverse(function(child){
+            const mapSprite = new THREE.TextureLoader().load(this.assetPath + 'textures/pine_sprite_ver3.png' );
+            const materialSprite = new THREE.SpriteMaterial( { map: mapSprite } );
+            const sprite = new THREE.Sprite( materialSprite );
 
-                    if (child.isMesh){  
-                        child.castShadow = true;
-                        //child.receiveShadow = true;
-                        // if(material){
-                        //     child.material = this.material
-                        // }
-                        
-                    }
-                })    
-                resolve(object.scene)
-            });
+            meshLod = highDetail.clone()
+            meshLod.scale.set(this.scale, this.scale, this.scale)
+            lod.addLevel( meshLod, 15 );
+
+            meshLod = midleDetail.clone()
+            meshLod.scale.set(this.scale, this.scale, this.scale)
+            lod.addLevel( meshLod, 35 );
+
+            meshLod = lowDetail.clone()
+            meshLod.scale.set(this.scale, this.scale, this.scale)
+            lod.addLevel( meshLod, 80 );
+
+            meshLod = sprite.clone()
+            meshLod.scale.set(this.scale*4, this.scale*4, this.scale*4)
+            lod.addLevel( meshLod, 130);
+
+            lod.position.copy(item)
+            lod.rotation.y = Math.random() * 3
+            let scaleLod = Math.random() * 1.6 + 0.4
+            lod.scale.set(scaleLod,scaleLod,scaleLod)
+
+            this.scene.add( lod );
         })
-       
-
     }
 
-        
-        
-    
-       
-    
+    // Загружает файл
+    async fileLoader2(url){
+        const loader = new GLTFLoader();
+        loader.setPath(this.assetPath);
+        return loader.loadAsync(url);
+    }
+
+    addProperties (object) {
+        object.scene.traverse(function(child){
+            if (child.isMesh){  
+                child.castShadow = true;
+                //child.receiveShadow = true;
+                // if(material){
+                //     child.material = this.material
+                // }
+            }
+        })
+        return object
+    }
 
 }
  
