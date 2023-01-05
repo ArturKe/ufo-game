@@ -17,16 +17,6 @@ const joy = new Joystick('body',{ right: 20, bottom: 20})
 const joyLeft = new Joystick('body',{ left: 20, bottom: 20})
 const ufoPlate = new Character({assetPath})
 
-
-// ---------------------------------------------- Raycaster
-// const raycaster = new THREE.Raycaster();
-
-// let rayOrigin = new THREE.Vector3(0, 1, 0)
-// let rayDirection = new THREE.Vector3(0, -1, 0)
-// raycaster.set(rayOrigin, rayDirection)
-// raycaster.far = 20
-
-
 // //--------------------------------------------------- Audio
 // const listener = new THREE.AudioListener();
 
@@ -53,18 +43,19 @@ function init(){
     //cubesRoundInit()
 
     // Cows
-    const sc = new Scatter(assetPath, 'cow_edit_ver1.glb', 1, 40)
-    sc.registerScene(scene)
-    sc.generate()
+    // const sc = new Scatter(assetPath, 'cow_edit_ver1.glb', 1, 40)
+    // sc.registerScene(scene)
+    // sc.generate()
 
     // Trees
-    const scl = new ScatterLOD(assetPath, 'pine_tree_triple_no_tank_ver2.glb', 1, 2000, 250)
+    const scl = new ScatterLOD(assetPath, 'pine_tree_triple_no_tank_ver2.glb', 0.6, 2000, 250)
     scl.registerScene(scene)
     scl.generateDimple()
+
     // scl.generateSimple()
 
     // Ufo Plate
-    ufoPlate.registerScene(scene)
+    ufoPlate.registerScene(scene, camera)
     ufoPlate.init()
     ufoPlate.registerControllers(joyLeft,joy)
 
@@ -122,14 +113,12 @@ function sceneInit() {
     document.body.appendChild( renderer.domElement );
 
 
-    // camera
+    // camera & controls
     camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
-    camera.position.set(3,2,0);
-
-    // controls
-    const controls = new OrbitControls( camera, renderer.domElement );
-    controls.target.set(1,2,0);
-    controls.update();
+    // camera.position.set(3,2,0);
+    // const controls = new OrbitControls( camera, renderer.domElement );
+    // controls.target.set(1,2,0);
+    // controls.update();
 
     window.addEventListener( 'resize', resize, false); 
 }
@@ -157,13 +146,13 @@ function update(){
     //const dt = clock.getDelta();
     //objControll()
 
-    // ufoPlate.updateCharacter();
+    ufoPlate.updateCharacter();
 }
 
-//----------------------------------------------------------- Geometry ------------------------------------------------------------------//
+// Geometry ------------------------------------------------------------------//
 
 function geometryInit() {
-    //--------------------------- Floor --------------------------//
+    // Floor -----------------//
     const floorGeometry = new THREE.PlaneGeometry( 500, 500 );
     const floorMaterial = new THREE.MeshStandardMaterial( {
         color: 0xeeeeee,
@@ -176,7 +165,7 @@ function geometryInit() {
     scene.add( floor );
     floor.position.y = -0.6;
   
-    //---------------- Grid -------------------//
+    // Grid -------------------//
     const grid = new THREE.GridHelper(500,100)
     scene.add(grid)
     grid.position.y = -0.6
@@ -206,10 +195,7 @@ function cubesInit(){
     };
 }
 
-
-//----------------------------------------- obj Generators -------------------------------------------------------//
-
-
+// Position Generator
 function posGen (count) {
     const positions =[]; 
     const raycaster = new THREE.Raycaster();
@@ -220,7 +206,6 @@ function posGen (count) {
     raycaster.far = 20
 
     for( let i = 0; i < count; i ++ ){
-
         const itemPosition = new THREE.Vector3();
 
         itemPosition.x = Math.random() * 20+1;
