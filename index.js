@@ -1,19 +1,14 @@
 import * as THREE from 'three';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { Joystick } from './src/components/Joystick'
 import { Scatter } from './src/components/scatter/Scatter';
 import { ScatterLOD } from './src/components/scatter_lod/ScatterLOD';
 import { Character } from './src/components/character/Character';
 
-
-console.log('Hello')
 let scene, renderer, reflectionCube, camera, helper, distance = 0, angle = 0, group, arrowHelper;
 const assetPath = './src/assets/';
-const sceneMeshes = []
-const catchedObjects = []
 
-const joy = new Joystick('body',{ right: 20, bottom: 20})
+const joyRight = new Joystick('body',{ right: 20, bottom: 20})
 const joyLeft = new Joystick('body',{ left: 20, bottom: 20})
 const ufoPlate = new Character({assetPath})
 
@@ -37,7 +32,7 @@ init();
 function init(){
 
     sceneInit()
-    geometryInit()
+    envGeometryInit()
 
     cubesInit()
     //cubesRoundInit()
@@ -51,29 +46,17 @@ function init(){
     const scl = new ScatterLOD(assetPath, 'pine_tree_triple_no_tank_ver2.glb', 0.6, 2000, 250)
     scl.registerScene(scene)
     scl.generateDimple()
-
     // scl.generateSimple()
 
     // Ufo Plate
     ufoPlate.registerScene(scene, camera)
     ufoPlate.init()
-    ufoPlate.registerControllers(joyLeft,joy)
-
-    //----------------------------------------------------------------//
-    // const mat = new THREE.MeshPhongMaterial({
-    //     color: new THREE.Color('red'),
-    //     envMap: reflectionCube
-    // });
+    ufoPlate.registerControllers(joyLeft,joyRight)
 
     // instLoader('cow_edit_ver1.glb', 1, 50, 200)
     // instLoader('pine_tree_triple_no_tank_ver2.glb', 2, 1000, 300)
 
-    let g =[]
-    g = posGen(30)
-    console.log(g)
-
     update()  
-      
 }
 
 //-----------------------------------------------------------------Scene Init -------------------------------//
@@ -81,7 +64,7 @@ function sceneInit() {
 
     scene = new THREE.Scene();
     //scene.background = new THREE.Color(0x00aaff);
-    //scene.fog = new THREE.FogExp2(0x00aaff, 0.01);
+    // scene.fog = new THREE.FogExp2(0x00aaff, 0.01);
       
     const width = window.innerWidth;
     const height = window.innerHeight;
@@ -113,7 +96,7 @@ function sceneInit() {
     document.body.appendChild( renderer.domElement );
 
 
-    // camera & controls
+    // Camera & controls
     camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
     // camera.position.set(3,2,0);
     // const controls = new OrbitControls( camera, renderer.domElement );
@@ -151,7 +134,7 @@ function update(){
 
 // Geometry ------------------------------------------------------------------//
 
-function geometryInit() {
+function envGeometryInit() {
     // Floor -----------------//
     const floorGeometry = new THREE.PlaneGeometry( 500, 500 );
     const floorMaterial = new THREE.MeshStandardMaterial( {
@@ -193,26 +176,4 @@ function cubesInit(){
       mesh.matrixAutoUpdate = false;
       scene.add( mesh );
     };
-}
-
-// Position Generator
-function posGen (count) {
-    const positions =[]; 
-    const raycaster = new THREE.Raycaster();
-
-    let rayOrigin = new THREE.Vector3(0, 5, 0)
-    let rayDirection = new THREE.Vector3(0, -1, 0)
-    raycaster.set(rayOrigin, rayDirection)
-    raycaster.far = 20
-
-    for( let i = 0; i < count; i ++ ){
-        const itemPosition = new THREE.Vector3();
-
-        itemPosition.x = Math.random() * 20+1;
-        itemPosition.y = Math.random() * 20+1;
-        itemPosition.z = Math.random() * 20+1;
-
-        positions.push(itemPosition)
-    }
-    return positions;
 }

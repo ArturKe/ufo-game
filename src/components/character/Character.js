@@ -13,7 +13,6 @@ export class Character {
         this.camera={};
         this.origin = new THREE.Group()
         this.origin.name = 'Origin'
-        this.originPlate = new THREE.Group()
         this.ufo = {}
 
         this.assetPath = params.assetPath;
@@ -33,7 +32,6 @@ export class Character {
         this.scene.add(this.origin)
       
         this.fileLoader('ufo_edit_fudailshajahan.glb', 0.6) //Загрузка тарелки
-    
     }
 
     registerScene(scene, camera){
@@ -56,10 +54,7 @@ export class Character {
             ufo.position.y = 2
             ufo.add(this.spotLight())
             this.ufo = ufo
-            // console.log('UFO')
-            // console.log(ufo)
-            this.originPlate.add(ufo)
-            this.origin.add(this.originPlate)
+            this.origin.add(ufo)
         })
     }
 
@@ -104,15 +99,10 @@ export class Character {
         
             this.origin.rotation.y -= +this.rightController.get().x/100; // Разворот
         
-            this.ufo.rotation.x = this.rightController.get().y/3  // Наклон вперед
-            // this.originPLate.rotation.x = this.rightController.get().y/3  // Наклон вперед   
+            this.ufo.rotation.x = this.rightController.get().y/3  // Наклон вперед 
             this.ufo.rotation.y = +this.rightController.get().x/4*-1
             this.ufo.rotation.z = +this.rightController.get().x/5*-1 + +this.leftController.get().x/5*-1 //Наклон в бок
-        } catch (error) {
-            
-        }
-
-        //group.children[0].rotation.z = +joyLeft.get().x/5*-1
+        } catch (error) {}
         
         // -------------------------------------- Arrow --------//
         // const n = new THREE.Vector3();

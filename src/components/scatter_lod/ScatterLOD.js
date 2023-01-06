@@ -13,12 +13,10 @@ export class ScatterLOD {
 
         this.assetPath = assetPath;
         this.positions = [];
-        this.init();
-
     }
 
     // Генерирует массив рандомных векторов позиций
-    init(){ 
+    init(){
         for (let i = 0; i < this.count; i++) {
             
             this.positions.push({
@@ -27,11 +25,13 @@ export class ScatterLOD {
                 z: Math.random() * this.area - this.area/2
             })
         }
+        console.log(this.posGen(10))
     }
 
 
     registerScene(scene){
         this.scene = scene
+        this.init();
     }
 
     // Генерирует ЛОДы составленные из примитивов, для наглядной демонстрации работы ЛОДов
@@ -154,6 +154,46 @@ export class ScatterLOD {
             }
         })
         return object
+    }
+
+    // Position Generator
+    posGen (count) {
+        const positions =[]; 
+        const raycaster = new THREE.Raycaster();
+
+        let rayOrigin = new THREE.Vector3(0, 0, 5)
+        let rayDirection = new THREE.Vector3(0, 0, -1)
+        raycaster.set(rayOrigin, rayDirection)
+        raycaster.far = 20
+
+        // calculate objects intersecting the picking ray
+	    const intersects = raycaster.intersectObjects( this.scene.children, false );
+        let INTERSECTED;
+
+        if ( intersects.length > 0 ) {
+            if ( INTERSECTED != intersects[ 0 ].object ) {
+                // if ( INTERSECTED ) INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
+                INTERSECTED = intersects[ 0 ];
+                console.log(INTERSECTED.object)
+                console.log(INTERSECTED.point)
+                // INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
+                // INTERSECTED.material.emissive.setHex( 0xff0000 );
+            }
+        } else {
+            // if ( INTERSECTED ) INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
+            INTERSECTED = null;
+        }
+
+        for( let i = 0; i < count; i ++ ){
+            const itemPosition = new THREE.Vector3();
+
+            itemPosition.x = Math.random() * 20+1;
+            itemPosition.y = Math.random() * 20+1;
+            itemPosition.z = Math.random() * 20+1;
+
+            positions.push(itemPosition)
+        }
+        return positions;
     }
 
 }

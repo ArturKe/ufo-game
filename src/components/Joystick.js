@@ -27,18 +27,12 @@ export class Joystick {
     }
 
     initDraw(){
-
-        // console.log('Drawing')
-        // console.log(this.classStick)
         let template = `
         <div class="${this.classJoystick}" ${this.styleJoystick} >
         
         <div class="${this.classStick}"  ${this.styleStick}></div>
         </div>`
         document.querySelector(this.className).insertAdjacentHTML('afterend', template);
-        
-        // this.bindEventsMouse()
-        // this.bindEventsTouch()
         
         // <button ${this.styleButton} class="${this.classButton}">Rright</button>
 
@@ -225,8 +219,8 @@ export class Joystick {
         }
         curentX = data.curentPosX + touchCurentPosX - data.startX
         curentY = data.curentPosY + touchCurentPosY - data.startY
-        console.log('curentXx: ' + curentX)
-        console.log('curentY: ' + curentY)
+        // console.log('curentXx: ' + curentX)
+        // console.log('curentY: ' + curentY)
         
         let remapX = this.remap(curentX,0,this.joystikSize-this.stickSize,-1,1)
         let remapY = this.remap(curentY,0,this.joystikSize-this.stickSize,-1,1)
